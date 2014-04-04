@@ -1363,6 +1363,159 @@ def tv2temp(tv, q, **kwargs):
     return _awips.tv2temp(tv, q, **kwargs)
 
 
+def ver_range(inp, count, minval, maxval, mode, **kwargs):
+    """
+    Adds one to each point in count for each point in
+    inp that is within the specified range.
+
+    Parameters
+    ----------
+    inp : array_like, 2D
+	Input array to be counted.
+    count : array_like, 2D
+        Initialized count values.
+    minval : array_like, 2D
+        Minimum value of range.
+    maxval : array_like, 2D
+        Maximum value of range.
+    mode : int
+	Type of counting to perform. 
+        If mode<0, will initiate count to zero.
+        If abs(mode)=2, tests for being outside range.
+        All other mode values test for being inside range.
+    ni : int, optional
+	Number of rows to check range for, default is all rows.
+        Rows beyond ni in will be zero filled.
+        
+    Returns
+    -------
+    count : array_like, 2D, float32
+	Final count. Will be same shape as inp.
+
+    Notes
+    -----
+    1) Input values > 1.e36 return flag value 1.e37.
+
+    Examples
+    --------
+    >>> import aoslib
+    >>> aoslib.ver_range(5, 0, 1, 10, 0)
+    array(1.0, dtype=float32)
+
+    """
+    return _awips.ver_range(inp,count,minval,maxval,mode,**kwargs)
+
+
+def virtualt(t, td, p, **kwargs):
+    """
+    Computes virtual temperature at all sounding levels.
+
+    Parameters
+    ----------
+    t : array_like, 1D
+	Sounding temperatures (Kelvin).
+    td : array_like, 1D
+	Sounding dew points (Kelvin).
+    P : array_like, 1D
+	Sounding pressures (millibar).
+
+    Returns
+    -------
+    tvir : array_like, 1D, float32
+	Sounding virtual temperatures (K). Will have same shape as t.
+
+    Notes
+    -----
+    1) Input temperatures (t or td) < 100 are assumed Celsius units. 
+       Result tvir will be converted to Kelvin.
+    2) Temperature input values > 373.15 or < -273.15 return flag value 1.e37.
+
+    Examples
+    --------
+    >>> import aoslib
+    >>> aoslib.virtualt(273,265,1013.25)
+    array([ 273.3336792], dtype=float32)
+
+    """
+    return _awips.virtualt(t, td, p, **kwargs)
+
+
+def winddir(u, v, **kwargs):
+    """
+    Calculate wind direction from the wind components.
+
+    Parameters
+    ----------
+    u : array_like, 2D
+	First wind component.
+    v : array_like, 2D
+	Second wind component.
+    ni : int, optional
+	Number of rows to calculate wind direction for, default is all rows.
+        Rows beyond ni in will be zero filled.
+        
+    Returns
+    -------
+    ff : array_like, 2D, float32
+	Wind direction (deg). Will have same shape as u.
+
+    Notes
+    -----
+    1) Values > 1.e10 in any of the input arrays are replaced with
+       flag value 1.e37 in return array.
+    2) No flags for negative values. 
+
+    Examples
+    --------
+    >>> import aoslib
+    >>> aoslib.winddir([[1, 0],[-1, 0]], [[0, 1],[0, -1]])
+    array([[ 270.,  180.],
+           [  90.,   -0.]], dtype=float32)
+
+    >>> aoslib.winddir([[3., 15.]], [[50., -50.]])
+    array([[ 183.43362427,  343.30075073]], dtype=float32)
+
+    """
+    return _awips.winddir(u, v, **kwargs)
+
+
+def windspeed(u, v, **kwargs):
+    """
+    Calculate wind speed from the wind components.
+
+    Parameters
+    ----------
+    u : array_like, 2D
+	First wind component (m/sec).
+    v : array_like, 2D
+	Second wind component (m/sec).
+    ni : int, optional
+	Number of rows to calculate wind speed for, default is all rows.
+        Rows beyond ni in will be zero filled.
+        
+    Returns
+    -------
+    ff : array_like, 2D, float32
+	Wind speed (m/sec). Will have same shape as u.
+
+    Notes
+    -----
+    1) Units are not changed (output units = input units). 
+    2) Values > 1.e10 in any of the input arrays are replaced with
+       flag value 1.e37 in return array.
+    3) No flags for negative values. 
+    4) ff values > 1.85e19 are replaced with 'inf'.
+
+    Examples
+    --------
+    >>> import aoslib
+    >>> aoslib.windspeed([[3., 15.]], [[50., -50.]])
+    array([[ 50.08992004,  52.20153427]], dtype=float32)
+
+    """
+    return _awips.windspeed(u, v, **kwargs)
+
+
 def ztopsa(z, **kwargs):
     """
     Convert a height into pressure in a standard atmosphere

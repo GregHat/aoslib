@@ -864,16 +864,18 @@ python module _awips ! in
             real dimension(mni,nj),depend(mni,nj) :: dy
             real dimension(mni,nj),depend(mni,nj) :: coriolis
         end subroutine pvpres
+
         subroutine ver_range(inp,count,minval,maxval,mode,mni,ni,nj) ! in :_aoslib:verrange.f
-            real dimension(mni,nj) :: inp
-            real dimension(mni,nj),depend(mni,nj) :: count
-            real dimension(mni,nj),depend(mni,nj) :: minval
-            real dimension(mni,nj),depend(mni,nj) :: maxval
-            integer :: mode
-            integer, optional,check(shape(inp,0)==mni),depend(inp) :: mni=shape(inp,0)
-            integer :: ni
-            integer, optional,check(shape(inp,1)==nj),depend(inp) :: nj=shape(inp,1)
+            real dimension(mni,nj), intent(in) :: inp
+            real dimension(mni,nj), intent(in,out), depend(mni,nj) :: count
+            real dimension(mni,nj), intent(in), depend(mni,nj) :: minval
+            real dimension(mni,nj), intent(in), depend(mni,nj) :: maxval
+            integer, intent(in) :: mode
+            integer, intent(hide), depend(inp) :: mni=shape(inp,0)
+            integer, optional,check(ni<=shape(inp,0)),depend(inp) :: ni=shape(inp,0)
+            integer, intent(hide), depend(inp) :: nj=shape(inp,1)
         end subroutine ver_range
+
         function cgp(tempip,dwptip,presip,thetawip,sfcpres,toppres,iw,deltap) ! in cgp.f
             real dimension(400), intent(in) :: tempip
             real dimension(400), intent(in) :: dwptip
@@ -963,12 +965,13 @@ python module _awips ! in
             real*4 :: smoothness
             common /qsmthcmn/ passes,smoothness
         end subroutine qvector
+
         subroutine virtualt(t,td,p,nlvls,tvir) ! in :_aoslib:virtualt.f
-            real dimension(nlvls) :: t
-            real dimension(nlvls),depend(nlvls) :: td
-            real dimension(nlvls),depend(nlvls) :: p
+            real dimension(nlvls), intent(in) :: t
+            real dimension(nlvls), intent(in), depend(nlvls) :: td
+            real dimension(nlvls), intent(in), depend(nlvls) :: p
             integer, optional,check(len(t)>=nlvls),depend(t) :: nlvls=len(t)
-            real dimension(nlvls),depend(nlvls) :: tvir
+            real dimension(nlvls), intent(out), depend(nlvls) :: tvir
         end subroutine virtualt
 
         subroutine constant(a,const_bn,mni,ni,nj) ! in :_aoslib:constant.f
@@ -1159,14 +1162,16 @@ python module _awips ! in
             integer :: ni
             integer, optional,check(shape(a,1)==nj),depend(a) :: nj=shape(a,1)
         end subroutine replinrange
+
         subroutine winddir(u,v,ff,mni,ni,nj) ! in :_aoslib:winddir.f
-            real dimension(mni,nj) :: u
-            real dimension(mni,nj),depend(mni,nj) :: v
-            real dimension(mni,nj),depend(mni,nj) :: ff
-            integer, optional,check(shape(u,0)==mni),depend(u) :: mni=shape(u,0)
-            integer :: ni
-            integer, optional,check(shape(u,1)==nj),depend(u) :: nj=shape(u,1)
+            real dimension(mni,nj),intent(in) :: u
+            real dimension(mni,nj),intent(in), depend(mni,nj) :: v
+            real dimension(mni,nj),intent(out), depend(mni,nj) :: ff
+            integer, intent(hide),depend(u) :: mni=shape(u,0)
+            integer, optional,check(ni<=shape(u,0)),depend(u) :: ni=shape(u,0)
+            integer, intent(hide),depend(u) :: nj=shape(u,1)
         end subroutine winddir
+
         subroutine cvgust(dd7,ui,gstpot) ! in :_aoslib:cvgust.f
             real :: dd7
             real :: ui
@@ -1184,14 +1189,16 @@ python module _awips ! in
             real :: tlcl
             real :: hlcl
         end subroutine lclpar
+
         subroutine windspeed(u,v,ff,mni,ni,nj) ! in :_aoslib:windspeed.f
-            real dimension(mni,nj) :: u
-            real dimension(mni,nj),depend(mni,nj) :: v
-            real dimension(mni,nj),depend(mni,nj) :: ff
-            integer, optional,check(shape(u,0)==mni),depend(u) :: mni=shape(u,0)
-            integer :: ni
-            integer, optional,check(shape(u,1)==nj),depend(u) :: nj=shape(u,1)
+            real dimension(mni,nj), intent(in) :: u
+            real dimension(mni,nj), intent(in), depend(mni,nj) :: v
+            real dimension(mni,nj), intent(out), depend(mni,nj) :: ff
+            integer, intent(hide), depend(u) :: mni=shape(u,0)
+            integer, optional,check(ni<=shape(u,0)),depent(u) :: ni=shape(u,0)
+            integer, intent(hide), depend(u) :: nj=shape(u,1)
         end subroutine windspeed
+
         subroutine ddff(u,v,dir,spd,nlvls) ! in :_aoslib:ddff.f
             real dimension(1) :: u
             real dimension(1) :: v

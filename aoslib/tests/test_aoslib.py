@@ -1003,6 +1003,94 @@ def test_ptozsa():
     assert_allclose(zout, test_out, atol=1e-8, rtol=1e-5)
 
 
+def test_ver_range():
+    inp = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    count = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    minval = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+    maxval = [7, 7, 7, 7, 7, 7, 7, 7, 7, 7]
+
+    mode_0 = [1, 1, 2, 2, 2, 2, 2, 1, 1, 1]
+    mode_neg1 = [0, 0, 1, 1, 1, 1, 1, 0, 0, 0]
+    mode_2 = [2, 2, 1, 1, 1, 1, 1, 2, 2, 2]
+    mode_neg2 = [1, 1, 0, 0, 0, 0, 0, 1, 1, 1]
+
+    if verbose:
+ 	print("ver_range:")
+	print aoslib.ver_range(inp, count, minval, maxval, mode=0)
+	print aoslib.ver_range(inp, count, minval, maxval, mode=-1)
+	print aoslib.ver_range(inp, count, minval, maxval, mode=2)
+	print aoslib.ver_range(inp, count, minval, maxval, mode=-2)
+
+    assert_allclose(aoslib.ver_range(inp,count,minval,maxval,mode=0),mode_0,atol=ATOL)
+    assert_allclose(aoslib.ver_range(inp,count,minval,maxval,mode=-1),mode_neg1,atol=ATOL)
+    assert_allclose(aoslib.ver_range(inp,count,minval,maxval,mode=2),mode_2,atol=ATOL)
+    assert_allclose(aoslib.ver_range(inp,count,minval,maxval,mode=-2),mode_neg2,atol=ATOL)
+
+
+def test_virtualt():
+    t = [273., 250., 27., 300., -30., 400]
+    td = [265., 240., 300, 30.0, -35., 380]
+    p = [1013.25, 1000.0, 1050.0, 1100.0, 800., -3.e11]
+
+    tvir = np.array([273.333679, 250.035202, 304.050537,
+                     304.490265, 243.185699, 1.e37], dtype='float32')
+
+    if verbose:
+        print aoslib.virtualt(t, td, p)
+
+    assert_allclose(aoslib.virtualt(t, td, p), tvir, atol=ATOL)
+
+
+def test_winddir():
+    u = [[3., 15.], [199., 200.], [2.e10, 2.e7]]
+    v = [[50.0, -50.0], [50.0, 50.0], [50., -3.e11]]
+
+    three_rows = np.array([[183.433624, 343.300751],
+                           [255.896027, 255.963760],
+                           [1.e37, 359.996185]], dtype='float32')
+    two_rows = np.array([[183.433624, 343.300751],
+                         [255.896027, 255.963760],
+                         [0., 0.]], dtype='float32')
+    one_row = np.array([[183.433624, 343.300751],
+                        [0., 0.],
+                        [0., 0.]], dtype='float32')
+    if verbose:
+        print aoslib.winddir(u, v)
+        print aoslib.winddir(u, v, ni=3)
+        print aoslib.winddir(u, v, ni=2)
+        print aoslib.winddir(u, v, ni=1)
+
+    assert_allclose(aoslib.winddir(u, v), three_rows, atol=ATOL)
+    assert_allclose(aoslib.winddir(u, v, ni=3), three_rows, atol=ATOL)
+    assert_allclose(aoslib.winddir(u, v, ni=2), two_rows, atol=ATOL)
+    assert_allclose(aoslib.winddir(u, v, ni=1), one_row, atol=ATOL)
+
+
+def test_windspeed():
+    u = [[3., 15.], [199., 200.], [2.e10, 2.e7]]
+    v = [[50.0, -50.0], [50.0, 50.0], [50., -3.e11]]
+
+    three_rows = np.array([[50.08992004, 52.20153427],
+                           [205.185287, 206.155289],
+                           [1.e37, 3.e11]], dtype='float32')
+    two_rows = np.array([[50.08992004, 52.20153427],
+                         [205.185287, 206.155289],
+                         [0., 0.]], dtype='float32')
+    one_row = np.array([[50.08992004, 52.20153427],
+                        [0., 0.],
+                        [0., 0.]], dtype='float32')
+    if verbose:
+        print aoslib.windspeed(u, v)
+        print aoslib.windspeed(u, v, ni=3)
+        print aoslib.windspeed(u, v, ni=2)
+        print aoslib.windspeed(u, v, ni=1)
+
+    assert_allclose(aoslib.windspeed(u, v), three_rows, atol=ATOL)
+    assert_allclose(aoslib.windspeed(u, v, ni=3), three_rows, atol=ATOL)
+    assert_allclose(aoslib.windspeed(u, v, ni=2), two_rows, atol=ATOL)
+    assert_allclose(aoslib.windspeed(u, v, ni=1), one_row, atol=ATOL)
+
+
 def test_ztopsa():
     zin = np.array(
         [1947.53320312, 11777.66894531, 20567.74609375, 110.40789795,
