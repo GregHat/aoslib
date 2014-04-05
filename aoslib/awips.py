@@ -1047,7 +1047,7 @@ def mult_by_cnst(a, const, **kwargs):
     const: real
         Value to be multiplied by each element of the input array.
     ni : int, optional
-        Number of rows to calculate natural log for, default is all rows.
+        Number of rows to multiply by const, default is all rows.
 	Rows beyond ni will be zero filled.
    
     Returns
